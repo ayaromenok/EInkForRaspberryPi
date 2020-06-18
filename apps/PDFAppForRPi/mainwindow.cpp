@@ -25,7 +25,7 @@ MainWindow::setupUI()
     lo->addWidget(lbIp4);
 
     _pdfDoc = new QPdfDocument();
-    //_pdfDoc->load(":/resTest/test1872x1404.pdf");
+    _pdfDoc->load(":/res/test/test1872x1404.pdf");
 
     _pdfView = new QPdfView();
     _pdfView->setDocument(_pdfDoc);

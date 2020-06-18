@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/test/test1872x1404.pdf</file>
+    </qresource>
+</RCC>
