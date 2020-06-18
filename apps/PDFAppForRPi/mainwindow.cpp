@@ -23,6 +23,14 @@ MainWindow::setupUI()
     QVBoxLayout *lo = new QVBoxLayout();
     QLabel *lbIp4 = new QLabel("QLabel");
     lo->addWidget(lbIp4);
+
+    _pdfDoc = new QPdfDocument();
+    //_pdfDoc->load(":/resTest/test1872x1404.pdf");
+
+    _pdfView = new QPdfView();
+    _pdfView->setDocument(_pdfDoc);
+    lo->addWidget(_pdfView);
+
     this->setLayout(lo);
 }
 
