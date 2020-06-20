@@ -35,10 +35,5 @@ private:
     QAction             *_aQuit;
     QAction             *_aGrabToEInk;
     QPixmap             *_pixMap;
-#ifdef HOST_RPI
-    IT8951DevInfo       gstI80DevInfo;
-    uint8_t*            gpFrameBuf; //Host Source Frame buffer
-    uint32_t            gulImgBufAddr; //IT8951 Image buffer address
-#endif //HOSTRPI
 };
 #endif // MAINWINDOW_H
