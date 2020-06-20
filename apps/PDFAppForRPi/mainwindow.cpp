@@ -87,12 +87,19 @@ MainWindow::grabToEInk()
     QPixmap pxmap = this->grab();
     pxmap.save("out.png");
 
+    QImage img(pxmap.toImage());
 
+    for (int i=0; i<pxmap.width(); i++)
+        for (int j=0; j<pxmap.height(); j++){
+            QColor cl = img.pixelColor(i,j);
+            quint8 grey = (quint8)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
+            drawPixel(i, j, grey);
+        }
 #ifdef HOST_RPI
 //    IT8951DisplayExample2();
-      clearScreen(0xF0);
-//    IT8951WaitForDisplayReady();
-      clearScreen(0xA0);
+//      clearScreen(0xF0);
+    IT8951UpdateScreen();
+    )
 #endif //HOSTRPI
 }
 void
@@ -100,6 +107,8 @@ MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
 {
 #ifdef HOST_RPI
     IT8951DrawPixel(x, y, c);
+#else
+    qDebug() << x << y << c;
 #endif //HOSTRPI
 }
 
