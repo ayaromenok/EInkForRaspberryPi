@@ -18,10 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
     }
 #endif //HOSTRPI
 
-    _pixMap = new QPixmap(1404, 1872);
+    //_pixMap = new QPixmap(1404, 1872);
     setupUI();
     setupActions();
-    setGeometry(0, 0, _pixMap->width(), _pixMap->height());
+    //setGeometry(0, 0, 1404,1872);
+    setFixedSize(1404,1872);
 }
 
 MainWindow::~MainWindow()
@@ -85,7 +86,8 @@ MainWindow::grabToEInk()
 {
     qDebug() << "grab to E-Ink";
     QPixmap pxmap = this->grab();
-    pxmap.save("out.png");
+
+    qDebug() << "PixMap is:" << pxmap.width() << "x"<< pxmap.height();
 
     QImage img(pxmap.toImage());
 
@@ -96,9 +98,12 @@ MainWindow::grabToEInk()
             drawPixel(j, (pxmap.width()-i), (quint8) grey);
         }
 #ifdef HOST_RPI
-//    IT8951DisplayExample2();
 //      clearScreen(0xF0);
+    qDebug() << "PDF grabbed to buffer";
     IT8951UpdateScreen();
+    qDebug() << "E-Ink screen updated";
+#else
+    pxmap.save("out.png");
 #endif //HOSTRPI
     qDebug() << "done.";
 }
