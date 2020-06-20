@@ -1,9 +1,9 @@
 #include "IT8951.h"
 
 //Global varivale
-IT8951DevInfo gstI80DevInfo;
-uint8_t* gpFrameBuf; //Host Source Frame buffer
-uint32_t gulImgBufAddr; //IT8951 Image buffer address
+//IT8951DevInfo gstI80DevInfo;
+//uint8_t* gpFrameBuf; //Host Source Frame buffer
+//uint32_t gulImgBufAddr; //IT8951 Image buffer address
 
 //-----------------------------------------------------------
 //Host controller function 1---Wait for host data Bus Ready

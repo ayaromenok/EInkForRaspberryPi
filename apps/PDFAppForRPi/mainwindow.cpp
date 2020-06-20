@@ -5,11 +5,6 @@
 #include <QtPdf/QPdfDocument>
 #include <QtPdfWidgets/QPdfView>
 
-#ifdef HOST_RPI
-extern "C" {
-    #include "driver/IT8951.h"
-}
-#endif //HOSTRPI
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -95,7 +90,9 @@ MainWindow::grabToEInk()
 
 #ifdef HOST_RPI
     //IT8951DisplayExample2();
-    clearScreen(0xAA);
+    clearScreen(0xF0);
+    IT8951WaitForDisplayReady();
+    clearScreen(0xA0);
 #endif //HOSTRPI
 }
 void
