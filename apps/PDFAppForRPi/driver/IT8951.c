@@ -876,3 +876,15 @@ void IT8951Display1bppExample2()
     IT8951DisplayArea1bpp(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 0, 0x00, 0xFF);
 }
 
+void IT8951ClearScreen(uint8_t c)
+{
+    memset(gpFrameBuf, c, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
+    IT8951WaitForDisplayReady();
+}
+void IT8951DrawPixel(uint16_t x, uint16_ty, uint8_t c)
+{
+    if( (x<0) || (x>=gstI80DevInfo.usPanelW) || (y<0) || (y>=gstI80DevInfo.usPanelH) )
+            return ;
+    gpFrameBuf[y*gstI80DevInfo.usPanelW + x] = c;
+    IT8951WaitForDisplayReady();
+}

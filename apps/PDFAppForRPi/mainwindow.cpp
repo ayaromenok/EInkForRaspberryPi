@@ -89,8 +89,8 @@ MainWindow::grabToEInk()
 
 
 #ifdef HOST_RPI
-    IT8951DisplayExample2();
-//    clearScreen(0xF0);
+//    IT8951DisplayExample2();
+      clearScreen(0xF0);
 //    IT8951WaitForDisplayReady();
 //    clearScreen(0xA0);
 #endif //HOSTRPI
@@ -99,9 +99,7 @@ void
 MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
 {
 #ifdef HOST_RPI
-//    if( (x<0) || (x>=gstI80DevInfo.usPanelW) || (y<0) || (y>=gstI80DevInfo.usPanelH) )
-//        return ;
-//    gpFrameBuf[y*gstI80DevInfo.usPanelW + x] = c;
+    IT8951DrawPixel(x, y, c);
 #endif //HOSTRPI
 }
 
@@ -109,6 +107,6 @@ void
 MainWindow::clearScreen(quint8 c)
 {
 #ifdef HOST_RPI
-//    memset(gpFrameBuf, c, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
+    IT8951ClearScreen(c);
 #endif //HOSTRPI
 }

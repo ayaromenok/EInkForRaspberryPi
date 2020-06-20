@@ -151,6 +151,8 @@ void IT8951WriteReg(uint16_t usRegAddr,uint16_t usValue);
 uint16_t IT8951GetVCOM(void);
 void IT8951SetVCOM(uint16_t vcom);
 
+void IT8951ClearScreen(uint8_t c);
+void IT8951DrawPixel(uint16_t x, uint16_ty, uint8_t c);
 #endif
 
 
