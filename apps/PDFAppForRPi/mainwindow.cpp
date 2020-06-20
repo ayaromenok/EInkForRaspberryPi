@@ -47,10 +47,27 @@ MainWindow::setupActions()
     _aQuit->setStatusTip(tr("QuitApp"));
     connect(_aQuit, &QAction::triggered, this, &MainWindow::quit);
     _tbMain->addAction(_aQuit);
+
+    const QIcon iconGrabToEink = QIcon(":/res/icons/grab-to-eink.png");
+    _aGrabToEInk = new QAction(iconGrabToEink, tr("&Grab"), this);
+    //_aGrabToEInk->setShortcut(Qt::Key_G);
+    QList<QKeySequence> scGrab = {Qt::Key_Space, Qt::Key_G};
+    _aGrabToEInk->setShortcuts(scGrab);
+    //_aGrabToEInk->setShortcut(Qt::Key_Space);
+    _aGrabToEInk->setStatusTip(tr("Grab to E-Ink"));
+    connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grab);
+    _tbMain->addAction(_aGrabToEInk);
 }
 
 void
 MainWindow::quit()
 {
+    qDebug() << "quit with 0...bye";
     QCoreApplication::quit();
+}
+
+void
+MainWindow::grab()
+{
+    qDebug() << "grab to E-Ink";
 }

@@ -19,11 +19,13 @@ private:
     void setupUI();
     void setupActions();
     void quit();
+    void grab();
 
     QPdfDocument        *_pdfDoc;
     QPdfView            *_pdfView;
     QToolBar            *_tbMain;
     QAction             *_aQuit;
+    QAction             *_aGrabToEInk;
 
 };
 #endif // MAINWINDOW_H
