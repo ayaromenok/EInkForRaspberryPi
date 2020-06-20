@@ -6,7 +6,9 @@
 #include <QtPdfWidgets/QPdfView>
 
 #ifdef HOST_RPI
-#include "driver/IT8951.h"
+extern "C" {
+    #include "driver/IT8951.h"
+}
 #endif //HOSTRPI
 
 MainWindow::MainWindow(QWidget *parent)
