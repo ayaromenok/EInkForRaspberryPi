@@ -2,8 +2,8 @@
 
 #include <QDebug>
 #include <QtWidgets>
-#include <QPdfDocument>
-#include <QPdfView>
+#include <QtPdf/QPdfDocument>
+#include <QtPdfWidgets/QPdfView>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
