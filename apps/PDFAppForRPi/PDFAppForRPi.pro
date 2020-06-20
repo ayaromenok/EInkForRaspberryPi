@@ -48,10 +48,12 @@ linux:!android {
          message("Host is arm64")
          HEADERS += driver/IT8951.h
          SOURCES += driver/IT8951.c
+         LIBS += -lbcm2835
     }
     contains(QMAKE_HOST.arch, armv7l):{
          message("Host is arm32")
          HEADERS += driver/IT8951.h
          SOURCES += driver/IT8951.c
+         LIBS += -lbcm2835
     }
 }

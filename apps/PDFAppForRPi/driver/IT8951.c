@@ -691,7 +691,7 @@ void IT8951DisplayExample2()
 }
 
 extern uint16_t bmp01[];
-
+/*
 void IT8951_GUI_Example()
 {
 	IT8951LdImgInfo stLdImgInfo;
@@ -756,16 +756,16 @@ void IT8951_GUI_Example()
 	
 	IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
 }
+*/
 
 void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
 {
 	IT8951LdImgInfo stLdImgInfo;
 	IT8951AreaImgInfo stAreaImgInfo;
-	
-	EPD_Clear(0xff);
-	
-	//ÏÔÊ¾Í¼Ïñ
-	Show_bmp(x,y,path);
+
+//need to be replaced	
+//	EPD_Clear(0xff);
+//	Show_bmp(x,y,path);
 
 	IT8951WaitForDisplayReady();
 	
