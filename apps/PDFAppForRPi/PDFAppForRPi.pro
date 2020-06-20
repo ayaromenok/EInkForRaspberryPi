@@ -28,6 +28,7 @@ RESOURCES += \
     resources.qrc
 
 android {
+    message("Android")
 ##arm64-v8a  armeabi  armeabi-v7a  mips  mips64  x86  x86_64
     contains(ANDROID_TARGET_ARCH, armeabi-v7a) {
         message("Android / Arm v7a / 32 bit")
@@ -39,13 +40,14 @@ android {
 }
 
 linux:!android {
+    message("Linux")
     contains(QMAKE_HOST.arch, x86_64):{
          message("Host is amd64")
     }
-    contains(QMAKE_HOST.arch, arm64-v8a):{
+    contains(QMAKE_HOST.arch, aarch64):{
          message("Host is arm64")
     }
-    contains(QMAKE_HOST.arch, armeabi-v7a):{
+    contains(QMAKE_HOST.arch, armv7l):{
          message("Host is arm32")
     }
 }
