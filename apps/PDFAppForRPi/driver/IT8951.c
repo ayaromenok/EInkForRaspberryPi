@@ -881,7 +881,7 @@ void IT8951ClearScreen(uint8_t c)
     memset(gpFrameBuf, c, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
     IT8951WaitForDisplayReady();
 }
-void IT8951DrawPixel(uint16_t x, uint16_ty, uint8_t c)
+void IT8951DrawPixel(uint16_t x, uint16_t y, uint8_t c)
 {
     if( (x<0) || (x>=gstI80DevInfo.usPanelW) || (y<0) || (y>=gstI80DevInfo.usPanelH) )
             return ;
