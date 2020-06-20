@@ -4,6 +4,8 @@
 #include <QWidget>
 class QPdfDocument;
 class QPdfView;
+class QAction;
+class QToolBar;
 
 class MainWindow : public QWidget
 {
@@ -15,8 +17,13 @@ public:
 
 private:
     void setupUI();
+    void setupActions();
+    void quit();
 
-    QPdfDocument*       _pdfDoc;
-    QPdfView*           _pdfView;
+    QPdfDocument        *_pdfDoc;
+    QPdfView            *_pdfView;
+    QToolBar            *_tbMain;
+    QAction             *_aQuit;
+
 };
 #endif // MAINWINDOW_H
