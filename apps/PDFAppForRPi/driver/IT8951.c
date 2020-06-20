@@ -533,6 +533,7 @@ uint8_t IT8951_Init()
 	bcm2835_spi_begin();
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   		//default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
+// SPI Speed https://elinux.org/index.php?title=RPi_SPI#Speed
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
 	
 	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);  
