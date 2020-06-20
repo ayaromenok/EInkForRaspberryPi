@@ -92,7 +92,7 @@ MainWindow::grabToEInk()
 //    IT8951DisplayExample2();
       clearScreen(0xF0);
 //    IT8951WaitForDisplayReady();
-//    clearScreen(0xA0);
+      clearScreen(0xA0);
 #endif //HOSTRPI
 }
 void

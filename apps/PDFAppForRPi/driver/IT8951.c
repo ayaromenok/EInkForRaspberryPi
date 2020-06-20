@@ -878,9 +878,29 @@ void IT8951Display1bppExample2()
 
 void IT8951ClearScreen(uint8_t c)
 {
+    IT8951LdImgInfo stLdImgInfo;
+    IT8951AreaImgInfo stAreaImgInfo;
+
     memset(gpFrameBuf, c, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
     IT8951WaitForDisplayReady();
+
+    //Setting Load image information
+    stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
+    stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
+    stLdImgInfo.usPixelFormat    = IT8951_8BPP;
+    stLdImgInfo.usRotate         = IT8951_ROTATE_0;
+    stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
+    //Set Load Area
+    stAreaImgInfo.usX      = 0;
+    stAreaImgInfo.usY      = 0;
+    stAreaImgInfo.usWidth  = gstI80DevInfo.usPanelW;
+    stAreaImgInfo.usHeight = gstI80DevInfo.usPanelH;
+    //Load Image from Host to IT8951 Image Buffer
+    IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
+    //Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform
+    IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
 }
+
 void IT8951DrawPixel(uint16_t x, uint16_t y, uint8_t c)
 {
     if( (x<0) || (x>=gstI80DevInfo.usPanelW) || (y<0) || (y>=gstI80DevInfo.usPanelH) )
