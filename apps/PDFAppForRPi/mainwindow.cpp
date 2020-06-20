@@ -14,6 +14,15 @@ extern "C" {
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+#ifdef HOST_RPI
+    if(IT8951_Init()) {
+        qDebug() << "IT8951_Init error \n";
+        QCoreApplication::exit(1);
+    } else {
+        qDebug() << "IT8951_Init is OK \n";
+    }
+#endif //HOSTRPI
+
     _pixMap = new QPixmap(1404/2, 1872/2);
     setupUI();
     setupActions();
@@ -22,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+#ifdef HOST_RPI
+    IT8951_Cancel();
+#endif //HOSTRPI
 }
 
 void
@@ -82,13 +94,24 @@ MainWindow::grabToEInk()
 
 
 #ifdef HOST_RPI
-    if(IT8951_Init()) {
-        qDebug() << "IT8951_Init error \n";
-        QCoreApplication::exit(1);
-    } else {
-        qDebug() << "IT8951_Init is OK \n";
-    }
-    IT8951DisplayExample2();
-    IT8951_Cancel();
+    //IT8951DisplayExample2();
+    clearScreen(0xAA);
+#endif //HOSTRPI
+}
+void
+MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
+{
+#ifdef HOST_RPI
+    if( (x<0) || (x>=gstI80DevInfo.usPanelW) || (y<0) || (y0>=gstI80DevInfo.usPanelH) )
+        return ;
+    gpFrameBuf[y*gstI80DevInfo.usPanelW + x] = c;
+#endif //HOSTRPI
+}
+
+void
+MainWindow::clearScreen(quint8 c)
+{
+#ifdef HOST_RPI
+    memset(gpFrameBuf, c, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
 #endif //HOSTRPI
 }

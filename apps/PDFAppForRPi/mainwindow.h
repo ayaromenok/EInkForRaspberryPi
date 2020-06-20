@@ -21,6 +21,8 @@ private:
     void setupActions();
     void quit();
     void grabToEInk();
+    void drawPixel(quint16 x, quint16 y, quint8 c);
+    void clearScreen(quint8 c);
 
     QPdfDocument        *_pdfDoc;
     QPdfView            *_pdfView;
