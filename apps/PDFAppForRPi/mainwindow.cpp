@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 #endif //HOSTRPI
 
-    _pixMap = new QPixmap(1404/2, 1872/2);
+    _pixMap = new QPixmap(1404, 1872);
     setupUI();
     setupActions();
     setGeometry(0, 0, _pixMap->width(), _pixMap->height());
@@ -92,15 +92,15 @@ MainWindow::grabToEInk()
     for (int i=0; i<pxmap.width(); i++)
         for (int j=0; j<pxmap.height(); j++){
             QColor cl = img.pixelColor(i,j);
-            quint8 grey = (quint8)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
-            drawPixel(i, j, grey);
+            quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
+            drawPixel(j, (pxmap.width()-i), (quint8) grey);
         }
 #ifdef HOST_RPI
 //    IT8951DisplayExample2();
 //      clearScreen(0xF0);
     IT8951UpdateScreen();
-    )
 #endif //HOSTRPI
+    qDebug() << "done.";
 }
 void
 MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
