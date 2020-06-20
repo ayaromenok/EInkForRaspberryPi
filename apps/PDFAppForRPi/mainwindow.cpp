@@ -5,6 +5,10 @@
 #include <QtPdf/QPdfDocument>
 #include <QtPdfWidgets/QPdfView>
 
+#ifdef HOST_RPI
+#include "driver/IT8951.h"
+#endif //HOSTRPI
+
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
@@ -73,4 +77,16 @@ MainWindow::grabToEInk()
     qDebug() << "grab to E-Ink";
     QPixmap pxmap = this->grab();
     pxmap.save("out.png");
+
+
+#ifdef HOST_RPI
+    if(IT8951_Init()) {
+        qDebug() << "IT8951_Init error \n";
+        QCoreApplication::exit(1);
+    } else {
+        qDebug() << "IT8951_Init is OK \n";
+    }
+    IT8951DisplayExample();
+    IT8951_Cancel();
+#endif //HOSTRPI
 }

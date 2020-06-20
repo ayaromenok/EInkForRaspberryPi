@@ -765,6 +765,15 @@ void IT8951_BMP_Example(uint32_t x, uint32_t y,char *path)
 
 //need to be replaced	
 //	EPD_Clear(0xff);
+/*
+    IT8951DevInfo gstI80DevInfo;
+    uint8_t* gpFrameBuf; //Host Source Frame buffer
+
+    void EPD_Clear(uint8_t Color)
+    {
+            memset(gpFrameBuf, Color, gstI80DevInfo.usPanelW * gstI80DevInfo.usPanelH);
+    }
+*/
 //	Show_bmp(x,y,path);
 
 	IT8951WaitForDisplayReady();
