@@ -21,8 +21,10 @@ MainWindow::MainWindow(QWidget *parent)
     //_pixMap = new QPixmap(1404, 1872);
     setupUI();
     setupActions();
-    //setGeometry(0, 0, 1404,1872);
-    setFixedSize(1404,1872);
+    setGeometry(0, 0, 1404,1872);
+    //setFixedSize(1404,1872);
+
+    //clearScreen(0xF);
 }
 
 MainWindow::~MainWindow()
