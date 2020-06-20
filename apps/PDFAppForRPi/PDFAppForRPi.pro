@@ -42,14 +42,16 @@ android {
 linux:!android {
     message("Linux")
     contains(QMAKE_HOST.arch, x86_64):{
-         message("Host is amd64")
+         message("Host is amd64")         
     }
     contains(QMAKE_HOST.arch, aarch64):{
          message("Host is arm64")
+         HEADERS += driver/IT8951.h
+         SOURCES += driver/IT8951.c
     }
     contains(QMAKE_HOST.arch, armv7l):{
          message("Host is arm32")
-         header += driver/IT8951.h
-         soucre += driver/IT8951.c
+         HEADERS += driver/IT8951.h
+         SOURCES += driver/IT8951.c
     }
 }
