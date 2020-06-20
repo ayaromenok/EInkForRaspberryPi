@@ -8,9 +8,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+    _pixMap = new QPixmap(1404/2, 1872/2);
     setupUI();
     setupActions();
-    setGeometry(0, 0, 1404/2, 1872/2);
+    setGeometry(0, 0, _pixMap->width(), _pixMap->height());
 }
 
 MainWindow::~MainWindow()
@@ -55,7 +56,7 @@ MainWindow::setupActions()
     _aGrabToEInk->setShortcuts(scGrab);
     //_aGrabToEInk->setShortcut(Qt::Key_Space);
     _aGrabToEInk->setStatusTip(tr("Grab to E-Ink"));
-    connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grab);
+    connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grabToEInk);
     _tbMain->addAction(_aGrabToEInk);
 }
 
@@ -67,7 +68,9 @@ MainWindow::quit()
 }
 
 void
-MainWindow::grab()
+MainWindow::grabToEInk()
 {
     qDebug() << "grab to E-Ink";
+    QPixmap pxmap = this->grab();
+    pxmap.save("out.png");
 }
