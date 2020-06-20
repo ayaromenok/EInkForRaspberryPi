@@ -88,7 +88,7 @@ MainWindow::grabToEInk()
     } else {
         qDebug() << "IT8951_Init is OK \n";
     }
-    IT8951DisplayExample();
+    IT8951DisplayExample2();
     IT8951_Cancel();
 #endif //HOSTRPI
 }
