@@ -49,5 +49,7 @@ linux:!android {
     }
     contains(QMAKE_HOST.arch, armv7l):{
          message("Host is arm32")
+         header += driver/IT8951.h
+         soucre += driver/IT8951.c
     }
 }
