@@ -16,13 +16,16 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         qDebug() << "IT8951_Init is OK \n";
     }
+    setGeometry(0, 0, 1404,1872);
+#else //HOSTRPI
+    setGeometry(0, 0, 1404/2,1872/2);
 #endif //HOSTRPI
 
     //_pixMap = new QPixmap(1404, 1872);
     _time = new QDateTime();
     setupUI();
     setupActions();
-    setGeometry(0, 0, 1404,1872);
+
     //setFixedSize(1404,1872);
 
     //clearScreen(0xF);
@@ -88,11 +91,14 @@ void
 MainWindow::grabToEInk()
 {
     qDebug() << "grab to E-Ink";
-    qint64 s0,s1,s2;
+    qint64 s0,s1,s2,s3;
     QPixmap pxmap = this->grab();
-
-    qDebug() << "PixMap is:" << pxmap.width() << "x"<< pxmap.height();
+    qDebug() << "clear screen." ;
     s0=_time->currentMSecsSinceEpoch();
+    clearScreen(0xF0);
+    s1=_time->currentMSecsSinceEpoch();
+    qDebug() << (s1-s0)<<"msec\n"<< "PixMap is:" << pxmap.width() << "x"<< pxmap.height();
+
     QImage img(pxmap.toImage());
 
     for (int i=0; i<pxmap.width(); i++)
@@ -102,12 +108,12 @@ MainWindow::grabToEInk()
             drawPixel(j, (pxmap.width()-i), (quint8) grey);
         }
 #ifdef HOST_RPI
-//      clearScreen(0xF0);
-    s1=_time->currentMSecsSinceEpoch();
-    qDebug() << "PDF grabbed to buffer: "<<(s1-s0) <<"msec";
-    IT8951UpdateScreen();
+
     s2=_time->currentMSecsSinceEpoch();
-    qDebug() << "E-Ink screen updated" << (s2-s1) <<"msec";
+    qDebug() << "PDF grabbed to buffer: "<<(s2-s1) <<"msec";
+    IT8951UpdateScreen();
+    s3=_time->currentMSecsSinceEpoch();
+    qDebug() << "E-Ink screen updated" << (s3-s2) <<"msec";
 #else
     pxmap.save("out.png");
 #endif //HOSTRPI
@@ -119,7 +125,7 @@ MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
 #ifdef HOST_RPI
     IT8951DrawPixel(x, y, c);
 #else
-    qDebug() << x << y << c;
+    //qDebug() << x << y << c;
 #endif //HOSTRPI
 }
 
