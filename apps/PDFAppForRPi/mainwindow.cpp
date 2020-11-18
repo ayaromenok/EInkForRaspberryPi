@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 #endif //HOSTRPI
 
     //_pixMap = new QPixmap(1404, 1872);
+    _time = new QDateTime();
     setupUI();
     setupActions();
     setGeometry(0, 0, 1404,1872);
@@ -87,10 +88,11 @@ void
 MainWindow::grabToEInk()
 {
     qDebug() << "grab to E-Ink";
+    qint64 s0,s1,s2;
     QPixmap pxmap = this->grab();
 
     qDebug() << "PixMap is:" << pxmap.width() << "x"<< pxmap.height();
-
+    s0=_time->currentMSecsSinceEpoch();
     QImage img(pxmap.toImage());
 
     for (int i=0; i<pxmap.width(); i++)
@@ -101,9 +103,11 @@ MainWindow::grabToEInk()
         }
 #ifdef HOST_RPI
 //      clearScreen(0xF0);
-    qDebug() << "PDF grabbed to buffer";
+    s1=_time->currentMSecsSinceEpoch();
+    qDebug() << "PDF grabbed to buffer: "<<(s1-s0) <<"msec";
     IT8951UpdateScreen();
-    qDebug() << "E-Ink screen updated";
+    s2=_time->currentMSecsSinceEpoch();
+    qDebug() << "E-Ink screen updated" << (s2-s1) <<"msec";
 #else
     pxmap.save("out.png");
 #endif //HOSTRPI

@@ -12,6 +12,7 @@ class QPdfView;
 class QAction;
 class QToolBar;
 class QPixmap;
+class QDateTime;
 
 class MainWindow : public QWidget
 {
@@ -35,5 +36,6 @@ private:
     QAction             *_aQuit;
     QAction             *_aGrabToEInk;
     QPixmap             *_pixMap;
+    QDateTime		*_time;
 };
 #endif // MAINWINDOW_H
