@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //setFixedSize(1404,1872);
 
-    //clearScreen(0xF);
+    clearScreen(0xF);
 }
 
 MainWindow::~MainWindow()

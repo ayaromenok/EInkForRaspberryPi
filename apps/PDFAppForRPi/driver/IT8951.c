@@ -1,9 +1,34 @@
 #include "IT8951.h"
 
+#include <inttypes.h>
+#include <math.h>
+#include <stdio.h>
+#include <time.h>
+
 //Global varivale
 IT8951DevInfo gstI80DevInfo;
 uint8_t* gpFrameBuf; //Host Source Frame buffer
 uint32_t gulImgBufAddr; //IT8951 Image buffer address
+
+
+void print_current_time_with_ms (void)
+{
+    long            ms; // Milliseconds
+    time_t          s;  // Seconds
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s  = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+    if (ms > 999) {
+        s++;
+        ms = 0;
+    }
+
+    printf("Current time: %"PRIdMAX".%03ld seconds since the Epoch\n",
+           (intmax_t)s, ms);
+}
 
 //-----------------------------------------------------------
 //Host controller function 1---Wait for host data Bus Ready
@@ -440,21 +465,36 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	uint16_t* pusFrameBuf = (uint16_t*)pstLdImgInfo->ulStartFBAddr;
 
 	//Set Image buffer(IT8951) Base address
+	printf("HostAreaPackedPixelWrite\n");
+	print_current_time_with_ms();
 	IT8951SetImgBufBaseAddr(pstLdImgInfo->ulImgBufBaseAddr);
+	print_current_time_with_ms();
 	//Send Load Image start Cmd
 	IT8951LoadImgAreaStart(pstLdImgInfo , pstAreaImgInfo);
+	print_current_time_with_ms();
+	printf("wait for a 7+ sec for 1872x1440\n");
 	//Host Write Data
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
+/*
 		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
 			{
 					//Write a Word(2-Bytes) for each time
 					LCDWriteData(*pusFrameBuf);
 					pusFrameBuf++;
 			}
+*/
+//		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
+			{
+					//Write a Word(2-Bytes) for each time
+					LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
+					pusFrameBuf = pusFrameBuf+pstAreaImgInfo->usWidth/2;
+			}
 	}
+	print_current_time_with_ms();
 	//Send Load Img End Command
 	IT8951LoadImgEnd();
+	print_current_time_with_ms();
 }
 
 //-----------------------------------------------------------
@@ -890,7 +930,6 @@ void IT8951UpdateScreen(){
     IT8951AreaImgInfo stAreaImgInfo;
 
     IT8951WaitForDisplayReady();
-
     //Setting Load image information
     stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
     stLdImgInfo.usEndianType     = IT8951_LDIMG_L_ENDIAN;
@@ -906,7 +945,6 @@ void IT8951UpdateScreen(){
     IT8951HostAreaPackedPixelWrite(&stLdImgInfo, &stAreaImgInfo);//Display function 2
     //Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform
     IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
-
 }
 
 void IT8951DrawPixel(uint16_t x, uint16_t y, uint8_t c)
