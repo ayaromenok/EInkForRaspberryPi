@@ -42,11 +42,11 @@ void
 MainWindow::setupUI()
 {
     QVBoxLayout *lo = new QVBoxLayout();
-    QLabel *lbIp4 = new QLabel("QLabel");
-    lo->addWidget(lbIp4);
+//    QLabel *lbIp4 = new QLabel("QLabel");
+//    lo->addWidget(lbIp4);
 
-    _tbMain = new QToolBar;
-    lo->addWidget(_tbMain);
+//    _tbMain = new QToolBar;
+//    lo->addWidget(_tbMain);
 
     _pdfDoc = new QPdfDocument();
     _pdfDoc->load(":/res/test/test1872x1404.pdf");
@@ -67,7 +67,8 @@ MainWindow::setupActions()
     _aQuit->setShortcut(Qt::Key_Q);
     _aQuit->setStatusTip(tr("QuitApp"));
     connect(_aQuit, &QAction::triggered, this, &MainWindow::quit);
-    _tbMain->addAction(_aQuit);
+    this->addAction(_aQuit);
+    //_tbMain->addAction(_aQuit);
 
     const QIcon iconGrabToEink = QIcon(":/res/icons/grab-to-eink.png");
     _aGrabToEInk = new QAction(iconGrabToEink, tr("&Grab"), this);
@@ -77,7 +78,8 @@ MainWindow::setupActions()
     //_aGrabToEInk->setShortcut(Qt::Key_Space);
     _aGrabToEInk->setStatusTip(tr("Grab to E-Ink"));
     connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grabToEInk);
-    _tbMain->addAction(_aGrabToEInk);
+    //_tbMain->addAction(_aGrabToEInk);
+    this->addAction(_aGrabToEInk);
 }
 
 void
