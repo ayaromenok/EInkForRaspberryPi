@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include <QtPdf/QPdfDocument>
 #include <QtPdfWidgets/QPdfView>
+#include <QtPdf/QPdfPageNavigation>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -45,11 +46,12 @@ MainWindow::setupUI()
 //    lo->addWidget(_tbMain);
 
     _pdfDoc = new QPdfDocument();
-    _pdfDoc->load(":/res/test/test1872x1404.pdf");
+    _pdfDoc->load(":/res/test/cm4io-product-brief.pdf");
 
     _pdfView = new QPdfView();
     _pdfView->setDocument(_pdfDoc);
     _pdfView->setZoomMode(QPdfView::FitInView);
+
 #ifdef HOST_RPI
     _pdfView->setFixedSize(1404,1872);
 #else //HOSTRPI
@@ -71,18 +73,32 @@ MainWindow::setupActions()
     _aQuit->setStatusTip(tr("QuitApp"));
     connect(_aQuit, &QAction::triggered, this, &MainWindow::quit);
     this->addAction(_aQuit);
-    //_tbMain->addAction(_aQuit);
+
 
     const QIcon iconGrabToEink = QIcon(":/res/icons/grab-to-eink.png");
-    _aGrabToEInk = new QAction(iconGrabToEink, tr("&Grab"), this);
-    //_aGrabToEInk->setShortcut(Qt::Key_G);
+    _aGrabToEInk = new QAction(iconGrabToEink, tr("&Grab"), this);    
     QList<QKeySequence> scGrab = {Qt::Key_Space, Qt::Key_G};
-    _aGrabToEInk->setShortcuts(scGrab);
-    //_aGrabToEInk->setShortcut(Qt::Key_Space);
+    _aGrabToEInk->setShortcuts(scGrab);    
     _aGrabToEInk->setStatusTip(tr("Grab to E-Ink"));
-    connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grabToEInk);
-    //_tbMain->addAction(_aGrabToEInk);
+    connect(_aGrabToEInk, &QAction::triggered, this, &MainWindow::grabToEInk);    
     this->addAction(_aGrabToEInk);
+
+    const QIcon iconPdfNextPage = QIcon();
+    _aPdfNextPage = new QAction(iconPdfNextPage, tr("&Next"), this);
+    QList<QKeySequence> ksPdfNextPage = {Qt::Key_Right, Qt::Key_N};
+    _aPdfNextPage->setShortcuts(ksPdfNextPage);
+    _aPdfNextPage->setStatusTip(tr("NextPage"));
+    connect(_aPdfNextPage, &QAction::triggered, this, &MainWindow::onActionPdfNextPage);
+    this->addAction(_aPdfNextPage);
+
+    const QIcon iconPdfPrevPage = QIcon();
+    _aPdfPrevPage = new QAction(iconPdfPrevPage, tr("&Prev"), this);
+    QList<QKeySequence> ksPdfPrevPage = {Qt::Key_Left, Qt::Key_P};
+    _aPdfPrevPage->setShortcuts(ksPdfPrevPage);
+    _aPdfPrevPage->setStatusTip(tr("PrevPage"));
+    connect(_aPdfPrevPage, &QAction::triggered, this, &MainWindow::onActionPdfPrevPage);
+    this->addAction(_aPdfPrevPage);
+
 }
 
 void
@@ -106,7 +122,7 @@ MainWindow::grabToEInk()
 
     QImage img(pxmap.toImage());
 
-
+#ifdef HOST_RPI
     for (int i=0; i<1404; i++){
         for (int j=0; j<1872; j++){
             QColor cl = img.pixelColor(i+11,j+11); //11,11 - position of QPdfView in full-screen widget
@@ -114,7 +130,6 @@ MainWindow::grabToEInk()
             drawPixel(j, (1404-i), (quint8) grey);
         }
     }
-#ifdef HOST_RPI
     s2=_time->currentMSecsSinceEpoch();
     qDebug() << "PDF grabbed to buffer: "<<(s2-s1) <<"msec";
     IT8951UpdateScreen();
@@ -141,4 +156,18 @@ MainWindow::clearScreen(quint8 c)
 #ifdef HOST_RPI
     IT8951ClearScreen(c);
 #endif //HOSTRPI
+}
+
+void
+MainWindow::onActionPdfNextPage()
+{
+    qDebug() << __FUNCTION__;
+    _pdfView->pageNavigation()->goToNextPage();
+}
+
+void
+MainWindow::onActionPdfPrevPage()
+{
+    qDebug() << __FUNCTION__;
+    _pdfView->pageNavigation()->goToPreviousPage();
 }

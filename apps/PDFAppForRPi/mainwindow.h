@@ -29,6 +29,8 @@ private:
     void grabToEInk();
     void drawPixel(quint16 x, quint16 y, quint8 c);
     void clearScreen(quint8 c);
+    void onActionPdfNextPage();
+    void onActionPdfPrevPage();
 
     QPdfDocument        *_pdfDoc;
     QPdfView            *_pdfView;
@@ -36,6 +38,8 @@ private:
     QAction             *_aQuit;
     QAction             *_aGrabToEInk;
     QPixmap             *_pixMap;
-    QDateTime		*_time;
+    QDateTime           *_time;
+    QAction             *_aPdfNextPage;
+    QAction             *_aPdfPrevPage;
 };
 #endif // MAINWINDOW_H
