@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         qDebug() << "IT8951_Init is OK \n";
     }
-    setGeometry(0, 0, 1404,1872);
+//    setGeometry(0, 0, 1404,1872);
 #else //HOSTRPI
     setGeometry(0, 0, 1404/2,1872/2);
 #endif //HOSTRPI
@@ -53,6 +53,8 @@ MainWindow::setupUI()
 
     _pdfView = new QPdfView();
     _pdfView->setDocument(_pdfDoc);
+    _pdfView->setFixedSize(1404,1872);
+    _pdfView->setZoomMode(QPdfView::FitInView);
     lo->addWidget(_pdfView);
 
     this->setLayout(lo);
@@ -103,14 +105,15 @@ MainWindow::grabToEInk()
 
     QImage img(pxmap.toImage());
 
-    for (int i=0; i<pxmap.width(); i++)
-        for (int j=0; j<pxmap.height(); j++){
-            QColor cl = img.pixelColor(i,j);
-            quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
-            drawPixel(j, (pxmap.width()-i), (quint8) grey);
-        }
-#ifdef HOST_RPI
 
+    for (int i=0; i<1404; i++){
+        for (int j=0; j<1872; j++){
+            QColor cl = img.pixelColor(i+11,j+11); //11,11 - position of QPdfView in full-screen widget
+            quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
+            drawPixel(j, (1404-i), (quint8) grey);
+        }
+    }
+#ifdef HOST_RPI
     s2=_time->currentMSecsSinceEpoch();
     qDebug() << "PDF grabbed to buffer: "<<(s2-s1) <<"msec";
     IT8951UpdateScreen();

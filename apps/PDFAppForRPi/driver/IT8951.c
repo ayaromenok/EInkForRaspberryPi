@@ -489,24 +489,15 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	//Send Load Image start Cmd
 	IT8951LoadImgAreaStart(pstLdImgInfo , pstAreaImgInfo);
 	t1=get_current_time_with_ms();
-	printf("wait for a 7+ sec for 1872x1440\n");
+	printf("wait for a 2.5+ sec for 1404x1872 in 15.6MHz SPI\n");
 	//Host Write Data
 
-#if 0
+//writing by line can give more stable result in time
+#if 0 
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
-/*
-		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
-			{
-					//Write a Word(2-Bytes) for each time
-					LCDWriteData(*pusFrameBuf);
-					pusFrameBuf++;
-			}
-*/
-			{
-					LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
-					pusFrameBuf = pusFrameBuf+pstAreaImgInfo->usWidth/2;
-			}
+		LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
+		pusFrameBuf = pusFrameBuf+pstAreaImgInfo->usWidth/2;
 	}
 #else
     LCDWriteNData(pusFrameBuf,(pstAreaImgInfo->usWidth*pstAreaImgInfo->usHeight)/2);
