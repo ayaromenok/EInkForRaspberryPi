@@ -494,7 +494,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	//Host Write Data
 
 //writing by line can give more stable result in time
-#if 1
+#if 0
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
 		LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
