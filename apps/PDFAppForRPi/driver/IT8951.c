@@ -30,6 +30,23 @@ void print_current_time_with_ms (void)
            (intmax_t)s, ms);
 }
 
+long get_current_time_with_ms(void)
+{
+    long            ms; // Milliseconds
+    time_t          s;  // Seconds
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s  = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+    if (ms > 999) {
+        s++;
+        ms = 0;
+    }
+    return s*1000+ms;
+}
+
 //-----------------------------------------------------------
 //Host controller function 1---Wait for host data Bus Ready
 //-----------------------------------------------------------
@@ -461,19 +478,21 @@ void IT8951WaitForDisplayReady()
 void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgInfo* pstAreaImgInfo)
 {
 	uint32_t i,j;
+	long t0, t1, t2;
 	//Source buffer address of Host
 	uint16_t* pusFrameBuf = (uint16_t*)pstLdImgInfo->ulStartFBAddr;
 
 	//Set Image buffer(IT8951) Base address
 	printf("HostAreaPackedPixelWrite\n");
-	print_current_time_with_ms();
+	t0=get_current_time_with_ms();
 	IT8951SetImgBufBaseAddr(pstLdImgInfo->ulImgBufBaseAddr);
-	print_current_time_with_ms();
 	//Send Load Image start Cmd
 	IT8951LoadImgAreaStart(pstLdImgInfo , pstAreaImgInfo);
-	print_current_time_with_ms();
+	t1=get_current_time_with_ms();
 	printf("wait for a 7+ sec for 1872x1440\n");
 	//Host Write Data
+
+#if 0
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
 /*
@@ -484,17 +503,18 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 					pusFrameBuf++;
 			}
 */
-//		 for(i=0;i< pstAreaImgInfo->usWidth/2;i++)
 			{
-					//Write a Word(2-Bytes) for each time
 					LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
 					pusFrameBuf = pusFrameBuf+pstAreaImgInfo->usWidth/2;
 			}
 	}
-	print_current_time_with_ms();
+#else
+    LCDWriteNData(pusFrameBuf,(pstAreaImgInfo->usWidth*pstAreaImgInfo->usHeight)/2);
+#endif // 0|1
 	//Send Load Img End Command
 	IT8951LoadImgEnd();
-	print_current_time_with_ms();
+	t2=get_current_time_with_ms();
+	printf("required time is:\t\t%03ld msec\n", (t2-t1));
 }
 
 //-----------------------------------------------------------
@@ -574,7 +594,10 @@ uint8_t IT8951_Init()
 	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);   		//default
 	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);               		//default
 // SPI Speed https://elinux.org/index.php?title=RPi_SPI#Speed
-	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
+// 8 - 31.2MHz, 16 - 15.6MHz, 32(default) - 7.8MHz, 64 - 3.9MHz, 128 - 1.953MHz,256 - 0.976MHz
+// 256/0.976Mhz: ~17sec; 128/1.953MHz: ~9sec, 64/3.9MHz: ~5.3sec, 32/7.8MHz: ~3.38sec, 16/15.6 ~2.5sec, 8/31.2MHz - unstable
+//	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
+	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_16);		//asking for 15.6MHz - 
 	
 	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);  
 	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
