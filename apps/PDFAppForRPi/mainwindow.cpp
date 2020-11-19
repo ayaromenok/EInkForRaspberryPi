@@ -16,17 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         qDebug() << "IT8951_Init is OK \n";
     }
-//    setGeometry(0, 0, 1404,1872);
 #else //HOSTRPI
-    setGeometry(0, 0, 1404/2,1872/2);
+
 #endif //HOSTRPI
 
-    //_pixMap = new QPixmap(1404, 1872);
     _time = new QDateTime();
     setupUI();
     setupActions();
-
-    //setFixedSize(1404,1872);
 
     clearScreen(0xF);
 }
@@ -53,8 +49,13 @@ MainWindow::setupUI()
 
     _pdfView = new QPdfView();
     _pdfView->setDocument(_pdfDoc);
-    _pdfView->setFixedSize(1404,1872);
     _pdfView->setZoomMode(QPdfView::FitInView);
+#ifdef HOST_RPI
+    _pdfView->setFixedSize(1404,1872);
+#else //HOSTRPI
+    _pdfView->setFixedSize(1404/2,1872/2);
+#endif //HOSTRPI
+
     lo->addWidget(_pdfView);
 
     this->setLayout(lo);
