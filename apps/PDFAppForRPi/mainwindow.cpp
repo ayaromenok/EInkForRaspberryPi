@@ -61,8 +61,8 @@ MainWindow::setupUI()
     lo->addWidget(_pdfView);
 
     this->setLayout(lo);
-    connect (_pdfView->pageNavigation(), &QPdfPageNavigation::currentPageChanged,
-             this, &MainWindow::grabToEInk);
+//    connect (_pdfView->pageNavigation(), &QPdfPageNavigation::currentPageChanged,
+//             this, &MainWindow::grabToEInk);
 }
 
 
@@ -159,7 +159,7 @@ MainWindow::onActionPdfNextPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToNextPage();
-
+    QTimer::singleShot(200, this, &MainWindow::grabToEInk);
 }
 
 void
@@ -167,4 +167,5 @@ MainWindow::onActionPdfPrevPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToPreviousPage();
+    QTimer::singleShot(200, this, &MainWindow::grabToEInk);gc
 }
