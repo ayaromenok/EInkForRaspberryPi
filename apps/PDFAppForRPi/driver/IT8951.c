@@ -119,13 +119,14 @@ void LCDWriteNData(uint16_t* pwBuf, uint32_t ulSizeWordCnt)
 	bcm2835_spi_transfer(wPreamble);
 	
 	LCDWaitForReady();
-
+/*
 	for(i=0;i<ulSizeWordCnt;i++)
 	{
 		bcm2835_spi_transfer(pwBuf[i]>>8);
 		bcm2835_spi_transfer(pwBuf[i]);
 	}
-	
+*/
+	bcm2835_spi_transfern((char*)pwBuf, ulSizeWordCnt*2);
 	bcm2835_gpio_write(CS,HIGH); 
 }  
 
@@ -493,7 +494,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo,IT8951AreaImgI
 	//Host Write Data
 
 //writing by line can give more stable result in time
-#if 0 
+#if 1
 	for(j=0;j< pstAreaImgInfo->usHeight;j++)
 	{
 		LCDWriteNData(pusFrameBuf,pstAreaImgInfo->usWidth/2);
@@ -589,8 +590,7 @@ uint8_t IT8951_Init()
 // 256/0.976Mhz: ~17sec; 128/1.953MHz: ~9sec, 64/3.9MHz: ~5.3sec, 32/7.8MHz: ~3.38sec, 16/15.6 ~2.5sec, 8/31.2MHz - unstable
 //	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);		//default
 	bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_16);		//asking for 15.6MHz - 
-	
-	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);  
+	bcm2835_gpio_fsel(CS, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(HRDY, BCM2835_GPIO_FSEL_INPT);
 	bcm2835_gpio_fsel(RESET, BCM2835_GPIO_FSEL_OUTP);
 	

@@ -111,7 +111,9 @@ MainWindow::quit()
 void
 MainWindow::grabToEInk()
 {
+    quint64 t0,t1;
     qDebug() << __FUNCTION__;
+    t0 = QDateTime::currentMSecsSinceEpoch();
     QPixmap pxmap = this->grab();
 //    clearScreen(0xF0);
     QImage img(pxmap.toImage());
@@ -119,18 +121,21 @@ MainWindow::grabToEInk()
 #ifdef HOST_RPI
     int w = (1404 > (img.width()-11)) ? (img.width()-11):1404;
     int h = (1872 > (img.height()-11)) ? (img.width()-11):1872;
+    qDebug() << "w, h" << w << h;
     for (int i=0; i<w; i++){
         for (int j=0; j<h; j++){
             QColor cl = img.pixelColor(i+11,j+11); //11,11 - position of QPdfView in full-screen widget
             quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
-            drawPixel(j, (h-i), (quint8) grey);
+            drawPixel(j, (w-i), (quint8) grey);
         }
     }
     IT8951UpdateScreen();
 #else
     pxmap.save("out.png");
 #endif //HOSTRPI
-    qDebug() << "done.";
+
+    t1 = QDateTime::currentMSecsSinceEpoch();
+    qDebug() << "done.total update time is" << (t1-t0) << "msec";
 }
 void
 MainWindow::drawPixel(quint16 x, quint16 y, quint8 c)
@@ -155,6 +160,9 @@ MainWindow::onActionPdfNextPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToNextPage();
+    int ms =1000;
+    struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
+    nanosleep(&ts, NULL);
     grabToEInk();
 }
 
