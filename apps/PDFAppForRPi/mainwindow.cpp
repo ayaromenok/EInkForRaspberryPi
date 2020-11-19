@@ -61,6 +61,8 @@ MainWindow::setupUI()
     lo->addWidget(_pdfView);
 
     this->setLayout(lo);
+    connect (_pdfView->pageNavigation(), &QPdfPageNavigation::currentPageChanged,
+             this, &MainWindow::grabToEInk);
 }
 
 
@@ -114,19 +116,16 @@ MainWindow::grabToEInk()
     quint64 t0,t1;
     qDebug() << __FUNCTION__;
     t0 = QDateTime::currentMSecsSinceEpoch();
-    QPixmap pxmap = this->grab();
+    QPixmap pxmap = _pdfView->grab();
 //    clearScreen(0xF0);
     QImage img(pxmap.toImage());
 
 #ifdef HOST_RPI
-    int w = (1404 > (img.width()-11)) ? (img.width()-11):1404;
-    int h = (1872 > (img.height()-11)) ? (img.width()-11):1872;
-    qDebug() << "w, h" << w << h;
-    for (int i=0; i<w; i++){
-        for (int j=0; j<h; j++){
+    for (int i=0; i<img.width(); i++){
+        for (int j=0; j<img.height(); j++){
             QColor cl = img.pixelColor(i+11,j+11); //11,11 - position of QPdfView in full-screen widget
             quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
-            drawPixel(j, (w-i), (quint8) grey);
+            drawPixel(j, (img.width()-i), (quint8) grey);
         }
     }
     IT8951UpdateScreen();
@@ -160,10 +159,7 @@ MainWindow::onActionPdfNextPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToNextPage();
-    int ms =1000;
-    struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
-    nanosleep(&ts, NULL);
-    grabToEInk();
+
 }
 
 void
@@ -171,5 +167,4 @@ MainWindow::onActionPdfPrevPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToPreviousPage();
-    grabToEInk();
 }

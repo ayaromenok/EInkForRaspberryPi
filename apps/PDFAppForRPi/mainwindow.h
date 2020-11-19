@@ -26,7 +26,7 @@ private:
     void setupUI();
     void setupActions();
     void quit();
-    void grabToEInk();
+
     void drawPixel(quint16 x, quint16 y, quint8 c);
     void clearScreen(quint8 c);
     void onActionPdfNextPage();
@@ -41,5 +41,8 @@ private:
     QDateTime           *_time;
     QAction             *_aPdfNextPage;
     QAction             *_aPdfPrevPage;
+
+private slots:
+    void grabToEInk();
 };
 #endif // MAINWINDOW_H
