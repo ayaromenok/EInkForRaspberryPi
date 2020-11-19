@@ -111,30 +111,22 @@ MainWindow::quit()
 void
 MainWindow::grabToEInk()
 {
-    qDebug() << "grab to E-Ink";
-    qint64 s0,s1,s2,s3;
+    qDebug() << __FUNCTION__;
     QPixmap pxmap = this->grab();
-    qDebug() << "clear screen." ;
-    s0=_time->currentMSecsSinceEpoch();
-    clearScreen(0xF0);
-    s1=_time->currentMSecsSinceEpoch();
-    qDebug() << (s1-s0)<<"msec\n"<< "PixMap is:" << pxmap.width() << "x"<< pxmap.height();
-
+//    clearScreen(0xF0);
     QImage img(pxmap.toImage());
 
 #ifdef HOST_RPI
-    for (int i=0; i<1404; i++){
-        for (int j=0; j<1872; j++){
+    int w = (1404 > (img.width()-11)) ? (img.width()-11):1404;
+    int h = (1872 > (img.height()-11)) ? (img.width()-11):1872;
+    for (int i=0; i<w; i++){
+        for (int j=0; j<h; j++){
             QColor cl = img.pixelColor(i+11,j+11); //11,11 - position of QPdfView in full-screen widget
             quint32 grey = (quint32)(cl.red()*299+cl.green()*587+cl.blue()*114+500)/1000;
-            drawPixel(j, (1404-i), (quint8) grey);
+            drawPixel(j, (h-i), (quint8) grey);
         }
     }
-    s2=_time->currentMSecsSinceEpoch();
-    qDebug() << "PDF grabbed to buffer: "<<(s2-s1) <<"msec";
     IT8951UpdateScreen();
-    s3=_time->currentMSecsSinceEpoch();
-    qDebug() << "E-Ink screen updated" << (s3-s2) <<"msec";
 #else
     pxmap.save("out.png");
 #endif //HOSTRPI
@@ -163,6 +155,7 @@ MainWindow::onActionPdfNextPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToNextPage();
+    grabToEInk();
 }
 
 void
@@ -170,4 +163,5 @@ MainWindow::onActionPdfPrevPage()
 {
     qDebug() << __FUNCTION__;
     _pdfView->pageNavigation()->goToPreviousPage();
+    grabToEInk();
 }
